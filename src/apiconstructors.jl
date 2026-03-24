@@ -17,7 +17,7 @@ figiidtype(id::Isin)::String = "ID_ISIN"
 figiidtype(id::Figi)::String = "ID_BB_GLOBAL"
 figiidtype(id::Ticker)::String = "TICKER"
 figiidtype(id::Index)::String = "VENDOR_INDEX_CODE"
-
+figiidtype(id::ShareClassFigi)::String = "ID_BB_GLOBAL_SHARE_CLASS_LEVEL"
 
 function checkfigikwargs(; kwargs...)
     for (key, value) in kwargs
@@ -75,13 +75,16 @@ function request(ids::Vector{<:AbstractString}, api::OpenFigiAPI; kwargs...)::Ve
     joblist = splitjobs(jobs, maxjobs)
     out = []
     p = Progress(length(joblist))
+    @info "number of jobs: $(length(joblist))"
     for job in joblist
+        @info "Requesting $(makeurl(api)) $(api.headers) $(job)"
         r = request("POST", makeurl(api), api.headers, JSON.json(job); status_exception=false)
         while r.status == 429
             for i in 0:waittime
                 print("\rLimit exceeded. Retrying in $(rpad(waittime - i, 3))s")
                 sleep(1)
             end
+            @info "Requesting AGAIN $(makeurl(api)) $(api.headers)"
             r = request("POST", makeurl(api), api.headers, JSON.json(job); status_exception=false)
         end
         push!(out, r)

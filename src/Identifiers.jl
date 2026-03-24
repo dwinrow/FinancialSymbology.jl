@@ -1,6 +1,6 @@
 module Identifiers
 
-export Identifier, Sedol, Cusip, Isin, Ticker, Figi, Index
+export Identifier, Sedol, Cusip, Isin, Ticker, Figi, Index, ShareClassFigi
 
 abstract type Identifier <: AbstractString end
 
@@ -68,6 +68,20 @@ struct Figi <: Identifier
     s::AbstractString
 end
 
+"""
+    ShareClassFigi(x::String)
+
+Create a Share Class FIGI Identifier.
+
+# Example
+```jldoctest; setup = :(using FinancialSymbology)
+julia> figi_id = Figi("BBG001S5N8V8")
+"BBG001S5N8V8"
+```
+"""
+struct ShareClassFigi <: Identifier
+    s::AbstractString
+end
 
 """
     Ticker(x::String)
@@ -117,6 +131,10 @@ Isin(s::Missing) = missing
 Figi(s::Identifier) = Figi(s.s)
 Figi(s::Figi) = s
 Figi(s::Missing) = missing
+
+ShareClassFigi(s::Identifier) = ShareClassFigi(s.s)
+ShareClassFigi(s::ShareClassFigi) = s
+ShareClassFigi(s::Missing) = missing
 
 Ticker(s::Identifier) = Ticker(s.s)
 Ticker(s::Ticker) = s

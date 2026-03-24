@@ -12,7 +12,7 @@ include("apitypes.jl")
 include("apiconstructors.jl")
 include("prettyprinters.jl")
 
-export Identifier, Sedol, Cusip, Isin, Figi, Ticker, Index
+export Identifier, Sedol, Cusip, Isin, Figi, Ticker, Index, ShareClassFigi
 export OpenFigiAPI
 export makeidentifier
 export fetchsecuritydata
